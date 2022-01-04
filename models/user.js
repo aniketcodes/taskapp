@@ -25,6 +25,11 @@ const userSchema = new mongoose.Schema( {
         throw new Error( 'Age must be a positive number' );
       }
     }
+  },
+  password: {
+    type: String,
+    minlength: 7,
+    required:true
   }
 } );
 
