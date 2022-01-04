@@ -5,7 +5,7 @@ module.exports = {
     try {
       let { name, email, age, password } = req.body;
       let result = await UserModel.create( { name, email, age, password } );
-      return res.send( result );
+      return res.send( {name,email,age} );
     } catch ( error ) {
       console.log("error in creating user ----->",error)
       return res.status( 400 ).send( error );
