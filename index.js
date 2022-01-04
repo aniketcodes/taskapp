@@ -4,6 +4,7 @@ const PORT = 8000;
 const db = require( "./config/mongoose" );
 
 
+app.use( "/", require( "./routes" ) );
 
 
 
