@@ -102,5 +102,14 @@ module.exports = {
       return res.status( 400 ).send( error )
 
     }
+  },
+  upload: async function ( req, res ) {
+    try {
+      
+      return res.send( { message: "uploaded avatar" } );
+    } catch (error) {
+      return res.status( 400 ).send( error )
+
+    }
   }
 }
