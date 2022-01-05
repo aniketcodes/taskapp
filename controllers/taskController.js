@@ -15,11 +15,16 @@ module.exports = {
   },
   viewAllTasks: async function ( req, res ) {
     try {
-      let owner = req.user._id;
-      let tasks = await req.user.populate( 'tasks' ).execPopulate();
-
-      return res.send( req.user.tasks );
-    } catch (error) {
+      let owner = req.user._id
+      let completed = req.query.completed == "true" ? true : false
+      let limit = parseInt( req.query.limit) || 10
+      let skip = parseInt( req.query.skip) || 0;
+      
+      console.log("limit and skip",limit,skip)
+      let tasks = await TaskModel.find( { owner ,completed},null,{limit,skip}).populate( 'owner', 'name email' ).exec();
+      return res.send( tasks );
+    } catch ( error ) {
+      console.log( 'error', error );
         return res.status( 400 ).send( error );
 
     }
@@ -36,7 +41,8 @@ module.exports = {
         message: "no task found"
       })
       
-    } catch (error) {
+    } catch ( error ) {
+      console.log( 'error', error );
       return res.status( 400 ).send( error );
 
     }
