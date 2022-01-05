@@ -1,5 +1,6 @@
 const UserModel = require( "../models/user" );
 const bcrypt = require( "bcryptjs" );
+const sharp=require("sharp")
 module.exports = {
   createUser: async function ( req, res ) {
     try {
@@ -105,7 +106,8 @@ module.exports = {
   },
   upload: async function ( req, res ) {
     try {
-      req.user.avatar = req.file.buffer
+      let buffer = await sharp( req.file.buffer ).resize( { width: 250, height: 250} ).png().toBuffer();
+      req.user.avatar = buffer
       await req.user.save();
       return res.send( { message: "uploaded avatar" } );
     } catch (error) {
@@ -136,7 +138,7 @@ module.exports = {
         })
       }
 
-      res.set( "Content-Type", "image/jpg" );
+      res.set( "Content-Type", "image/png" );
       return res.send( user.avatar );
       
     } catch (error) {
