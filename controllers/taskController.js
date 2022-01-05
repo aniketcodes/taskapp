@@ -16,8 +16,9 @@ module.exports = {
   viewAllTasks: async function ( req, res ) {
     try {
       let owner = req.user._id;
-      let tasks = await TaskModel.find({owner});
-      return res.send( tasks );
+      let tasks = await req.user.populate( 'tasks' ).execPopulate();
+
+      return res.send( req.user.tasks );
     } catch (error) {
         return res.status( 400 ).send( error );
 
