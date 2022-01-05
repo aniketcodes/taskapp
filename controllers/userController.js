@@ -12,10 +12,9 @@ module.exports = {
       return res.status( 400 ).send( error );
     }
   },
-  viewAllUsers: async function ( req, res ) {
+  viewMe: async function ( req, res ) {
     try {
-      let users = await UserModel.find( {}, { password: 0 } );
-      return res.send( users )
+      return res.send( req.user )
     } catch ( error ) {
       return res.status( 400 ).send( error )
 
