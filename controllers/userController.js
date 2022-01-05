@@ -1,5 +1,5 @@
 const UserModel = require( "../models/user" );
-
+const bcrypt = require( "bcryptjs" );
 module.exports = {
   createUser: async function ( req, res ) {
     try {
@@ -43,6 +43,32 @@ module.exports = {
         return res.status( 404 ).send();
       }
       return res.send( result );
+    } catch (error) {
+      return res.status( 400 ).send( error )
+
+    }
+  },
+  login: async function ( req, res ) {
+    try {
+      let { email, password } = req.body;
+      
+      let user = await UserModel.findOne( { email } );
+      if ( !user ) {
+        return res.status( 404 ).send();
+      }
+
+      if ( !await bcrypt.compare( password, user.password ) ) {
+        return res.status( 401 ).send( {
+          message:"Unable to login. Check your credentials"
+        })
+      }
+
+      return res.send( {
+        name: user.name,
+        email: user.email,
+        age:user.age
+      })
+      
     } catch (error) {
       return res.status( 400 ).send( error )
 
