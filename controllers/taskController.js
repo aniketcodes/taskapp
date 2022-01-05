@@ -4,7 +4,8 @@ module.exports = {
   createTask: async function ( req, res ) {
     try {
       let { description, completed } = req.body;
-      let result = await TaskModel.create( { description, completed } );
+      let owner = req.user._id;
+      let result = await TaskModel.create( { description, completed ,owner} );
       return res.send( result );
       
     } catch ( error ) {
@@ -14,17 +15,19 @@ module.exports = {
   },
   viewAllTasks: async function ( req, res ) {
     try {
-      let tasks = await TaskModel.find();
+      let owner = req.user._id;
+      let tasks = await TaskModel.find({owner});
       return res.send( tasks );
     } catch (error) {
-            return res.status( 400 ).send( error );
+        return res.status( 400 ).send( error );
 
     }
   },
   viewTask: async function ( req, res ) {
     try {
       let taskId = req.params.id;
-      let task = await TaskModel.findOne( { _id: taskId } );
+      let owner = req.user._id;
+      let task = await TaskModel.findOne( { _id: taskId ,owner} );
       if ( task ) {
         return res.send( task );
       }
@@ -41,7 +44,8 @@ module.exports = {
   deleteTaskAndCount: async function ( req, res ) {
     try {
       let taskId = req.params.id;
-       await TaskModel.deleteOne( { _id: taskId } );
+      let owner = req.user._id;
+       await TaskModel.deleteOne( { _id: taskId,owner } );
       let count = await TaskModel.countDocuments({completed:false});
       return res.send( { count} );
       
@@ -53,9 +57,10 @@ module.exports = {
   },
   updateTask: async function ( req, res ) {
     try {
-      let taskId = req.params.id
+      let taskId = req.params.id;
+      let owner = req.user._id;
       let { description,completed } = req.body
-      let result = await UserModel.findByIdAndUpdate( taskId, { description,completed }, { new: true, runValidators: true } )
+      let result = await UserModel.findOneAndUpdate( { _id: taskId,owner}, { description,completed }, { new: true, runValidators: true } )
       if ( !result ) {
         return res.status( 404 ).send()
       }
