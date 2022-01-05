@@ -112,5 +112,17 @@ module.exports = {
       return res.status( 400 ).send( error )
 
     }
+  },
+  deleteAvatar: async function ( req, res ) {
+    try {
+      req.user.avatar = undefined;
+      await req.user.save();
+      return res.send( {
+        message:"avatar deleted"
+      })
+    } catch (error) {
+      return res.status( 400 ).send( error )
+
+    }
   }
 }
