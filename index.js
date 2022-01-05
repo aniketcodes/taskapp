@@ -1,6 +1,8 @@
+const dotenv = require( "dotenv" );
+dotenv.config();
 const express = require( "express" );
 const app = express();
-const PORT = 8000;
+const PORT = process.env.PORT;
 const db = require( "./config/mongoose" );
 app.use( express.urlencoded( { limit: '50mb', extended: true } ) )
 app.use( express.json( { limit: '50mb' } ) );

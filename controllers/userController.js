@@ -1,12 +1,15 @@
 const UserModel = require( "../models/user" );
 const bcrypt = require( "bcryptjs" );
-const sharp=require("sharp")
+const sharp = require( "sharp" )
+
+const sendEmail = require( "../helper/mailer" );
 module.exports = {
   createUser: async function ( req, res ) {
     try {
       let { name, email, age, password } = req.body;
       let user = await UserModel.create( { name, email, age, password } );
       let token = await user.generateAuthToken()
+      await sendEmail( user.email, user.name );
       return res.send( { user, token } )
     } catch ( error ) {
       console.log("error in creating user ----->",error)
