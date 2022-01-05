@@ -33,5 +33,19 @@ module.exports = {
     } catch ( error ) {
       return res.status( 400 ).send( error )
     }
+  },
+  updateUser: async function ( req, res ) {
+    try {
+      let userId = req.params.id;
+      let { name, email, age, password } = req.body;
+      let result = await UserModel.findByIdAndUpdate( userId, { name, email, age, password }, { fields: { password: 0 }, new: true, runValidators: true } );
+      if ( !result ) {
+        return res.status( 404 ).send();
+      }
+      return res.send( result );
+    } catch (error) {
+      return res.status( 400 ).send( error )
+
+    }
   }
 }

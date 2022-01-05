@@ -41,13 +41,27 @@ module.exports = {
   deleteTaskAndCount: async function ( req, res ) {
     try {
       let taskId = req.params.id;
-      await TaskModel.deleteOne( { _id: taskId } );
+       await TaskModel.deleteOne( { _id: taskId } );
       let count = await TaskModel.countDocuments({completed:false});
       return res.send( { count} );
       
     } catch ( error ) {
       console.log( "Error in delteing task ---->", error );
       return res.status( 400 ).send( error );
+
+    }
+  },
+  updateTask: async function ( req, res ) {
+    try {
+      let taskId = req.params.id
+      let { description,completed } = req.body
+      let result = await UserModel.findByIdAndUpdate( taskId, { description,completed }, { new: true, runValidators: true } )
+      if ( !result ) {
+        return res.status( 404 ).send()
+      }
+      return res.send( result )
+    } catch ( error ) {
+      return res.status( 400 ).send( error )
 
     }
   }
