@@ -1,7 +1,6 @@
 const multer = require( "multer" );
 
 const upload = multer( {
-  dest: "images",
   limits: {
     fileSize:10000000
   },

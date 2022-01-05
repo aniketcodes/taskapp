@@ -105,7 +105,8 @@ module.exports = {
   },
   upload: async function ( req, res ) {
     try {
-      
+      req.user.avatar = req.file.buffer
+      await req.user.save();
       return res.send( { message: "uploaded avatar" } );
     } catch (error) {
       return res.status( 400 ).send( error )
