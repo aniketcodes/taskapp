@@ -124,5 +124,24 @@ module.exports = {
       return res.status( 400 ).send( error )
 
     }
+  },
+  viewAvatar: async function ( req, res ) {
+    try {
+      let userId = req.params.id;
+      let user = await UserModel.findById( userId );
+
+      if ( !user || !user.avatar ) {
+        return res.status(404).send( {
+          message:"Either user or image is missing"
+        })
+      }
+
+      res.set( "Content-Type", "image/jpg" );
+      return res.send( user.avatar );
+      
+    } catch (error) {
+      return res.status( 400 ).send( error )
+
+    }
   }
 }

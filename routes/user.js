@@ -10,6 +10,7 @@ router.patch( "/me", userController.updateUser );
 router.delete( "/me", auth, userController.deleteUser );
 router.post( "/me/avatar", auth, uploadMiddleware, userController.upload );
 router.delete( "/me/avatar", auth, userController.deleteAvatar );
+router.get( '/:id/avatar',auth,userController.viewAvatar );
 router.post( '/login', userController.login );
 router.get( "/logout", auth, userController.logout );
 
