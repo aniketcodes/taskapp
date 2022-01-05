@@ -19,8 +19,6 @@ module.exports = {
       let completed = req.query.completed == "true" ? true : false
       let limit = parseInt( req.query.limit) || 10
       let skip = parseInt( req.query.skip) || 0;
-      
-      console.log("limit and skip",limit,skip)
       let tasks = await TaskModel.find( { owner ,completed},null,{limit,skip}).populate( 'owner', 'name email' ).exec();
       return res.send( tasks );
     } catch ( error ) {
