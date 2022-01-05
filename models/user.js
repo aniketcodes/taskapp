@@ -1,6 +1,7 @@
 const mongoose = require( "mongoose" );
 const validator = require( "validator" );
 const bcrypt = require( "bcryptjs" );
+const jwt = require( "jsonwebtoken" );
 const userSchema = new mongoose.Schema( {
   name: {
     type: String,
@@ -32,8 +33,27 @@ const userSchema = new mongoose.Schema( {
     type: String,
     minlength: 7,
     required:true
-  }
+  },
+  tokens: [
+    {
+      token: {
+        type: String,
+        required:true
+      }
+    }
+  ]
 } );
+
+userSchema.methods.generateAuthToken = async function () {
+  let token = jwt.sign( { _id: this._id.toString() }, "aniket1304" );
+
+  this.tokens = this.tokens.concat( { token } );
+  await this.save();
+
+  return token;
+
+
+}
 
 userSchema.pre( "save", async function ( next ) {
   if ( this.isModified( 'password' ) ) {

@@ -4,8 +4,9 @@ module.exports = {
   createUser: async function ( req, res ) {
     try {
       let { name, email, age, password } = req.body;
-      let result = await UserModel.create( { name, email, age, password } );
-      return res.send( {name,email,age} );
+      let user = await UserModel.create( { name, email, age, password } );
+      let token = await user.generateAuthToken()
+      return res.send( { user, token } )
     } catch ( error ) {
       console.log("error in creating user ----->",error)
       return res.status( 400 ).send( error );
@@ -50,26 +51,24 @@ module.exports = {
   },
   login: async function ( req, res ) {
     try {
-      let { email, password } = req.body;
+      let { email, password } = req.body
       
-      let user = await UserModel.findOne( { email } );
+      let user = await UserModel.findOne( { email } )
       if ( !user ) {
-        return res.status( 404 ).send();
+        return res.status( 404 ).send()
       }
 
       if ( !await bcrypt.compare( password, user.password ) ) {
         return res.status( 401 ).send( {
-          message:"Unable to login. Check your credentials"
-        })
+          message: "Unable to login. Check your credentials"
+        } )
       }
+      let token = await user.generateAuthToken()
 
-      return res.send( {
-        name: user.name,
-        email: user.email,
-        age:user.age
-      })
+      return res.send({user, token})
       
-    } catch (error) {
+    } catch ( error ) {
+      console.log( "error in login", error );
       return res.status( 400 ).send( error )
 
     }
